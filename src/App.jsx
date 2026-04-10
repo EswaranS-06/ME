@@ -128,6 +128,42 @@ function TypeWriter({ text, speed = 60, onDone }) {
   return <span>{displayed}<span className="typewriter-cursor">&nbsp;</span></span>;
 }
 
+function CyclingLogo({ names }) {
+  const [index, setIndex] = useState(0);
+  const [subIndex, setSubIndex] = useState(0);
+  const [reverse, setReverse] = useState(false);
+  
+  useEffect(() => {
+    if (index >= names.length) return;
+
+    // Transition to reversing
+    if (subIndex === names[index].length + 1 && !reverse) {
+      const timeout = setTimeout(() => setReverse(true), 2000);
+      return () => clearTimeout(timeout);
+    }
+
+    // Transition to next index
+    if (subIndex === 0 && reverse) {
+      setReverse(false);
+      setIndex((prev) => (prev + 1) % names.length);
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      setSubIndex((prev) => prev + (reverse ? -1 : 1));
+    }, reverse ? 60 : 120);
+
+    return () => clearTimeout(timeout);
+  }, [subIndex, index, reverse, names]);
+
+  return (
+    <>
+      {names[index].substring(0, subIndex)}
+      <span className="cursor-blink">_</span>
+    </>
+  );
+}
+
 function Counter({ target, label }) {
   const [count, setCount] = useState(0);
   const [ref, visible] = useInView();
@@ -152,27 +188,41 @@ function Counter({ target, label }) {
 
 function NavBar({ active, onHomeClick }) {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 40);
     window.addEventListener("scroll", fn);
     return () => window.removeEventListener("scroll", fn);
   }, []);
+
   const links = ["ABOUT", "PROJECTS", "SKILLS", "CERTS", "WRITEUPS", "CONTACT"];
+
+  const toggleMenu = () => setMenuOpen(!menuOpen);
+  const closeMenu = () => setMenuOpen(false);
+
   return (
-    <nav className={`nav-bar ${scrolled ? "scrolled" : ""}`}>
-      <div className="nav-logo" onClick={onHomeClick} style={{ cursor: 'pointer' }}>
-        ES<span>_</span>
+    <nav className={`nav-bar ${scrolled ? "scrolled" : ""} ${menuOpen ? "menu-open" : ""}`}>
+      <div className="nav-logo" onClick={() => { onHomeClick && onHomeClick(); closeMenu(); }} style={{ cursor: 'pointer' }}>
+        <CyclingLogo names={["REX", "Raymen_Rex", "Eswaran S"]} />
       </div>
-      <div className="nav-links">
+
+      <button className="menu-toggle" onClick={toggleMenu} aria-label="Toggle Menu">
+        <span className="bar"></span>
+        <span className="bar"></span>
+        <span className="bar"></span>
+      </button>
+
+      <div className={`nav-links ${menuOpen ? "open" : ""}`}>
         {links.map(l => (
           <a 
             key={l} 
             href={onHomeClick ? "#" : `#${l.toLowerCase()}`}
             onClick={(e) => {
+              closeMenu();
               if (onHomeClick) {
                 e.preventDefault();
                 onHomeClick();
-                // We'll trust the browser to scroll to the id after the component re-renders if we use a timeout or similar
                 setTimeout(() => {
                   const el = document.getElementById(l.toLowerCase());
                   if (el) el.scrollIntoView();

@@ -85,9 +85,19 @@ html {
   color: var(--primary-red);
 }
 
+.cursor-blink {
+  color: var(--primary-red);
+  display: inline-block;
+  animation: blink 1s step-end infinite;
+}
+
 .nav-links {
   display: flex;
   gap: 2rem;
+}
+
+.menu-toggle {
+  display: none;
 }
 
 .nav-link {
@@ -798,6 +808,217 @@ html {
 }
 
 /* UTILITIES */
+.mt-2 { margin-top: 0.5rem; }
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 1100px) {
+  .hero-title { font-size: clamp(3rem, 10vw, 9rem); }
+  .about-grid, .projects-grid, .contact-grid { gap: 3rem; }
+  .skills-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .hero-title { font-size: 6rem; }
+  .hero-section { padding-top: 100px; }
+  .section-padding { padding: 5rem 3rem; }
+}
+
+@media (max-width: 768px) {
+  /* NAVBAR MOBILE */
+  .nav-bar {
+    padding: 0 1.5rem;
+    height: 64px;
+    background: #000 !important; /* Force black on mobile nav */
+  }
+
+  .menu-toggle {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 24px;
+    height: 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 100;
+  }
+
+  .menu-toggle .bar {
+    height: 2px;
+    width: 100%;
+    background-color: #fff;
+    transition: all 0.3s ease;
+  }
+
+  .nav-bar.menu-open .menu-toggle .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+  .nav-bar.menu-open .menu-toggle .bar:nth-child(2) {
+    opacity: 0;
+  }
+  .nav-bar.menu-open .menu-toggle .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 100%;
+    height: 100vh;
+    background: #000;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    transition: right 0.4s cubic-bezier(0.77, 0.2, 0.05, 1);
+    z-index: 99;
+  }
+
+  .nav-links.open {
+    right: 0;
+  }
+
+  .nav-link {
+    font-size: 1.2rem;
+    letter-spacing: 0.3em;
+  }
+
+  /* HERO MOBILE/TABLET */
+  .hero-section {
+    padding-top: 100px;
+    padding-bottom: 4rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    min-height: auto;
+  }
+
+  .hero-content {
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .hero-title {
+    font-size: clamp(3.5rem, 12vw, 5.5rem);
+    line-height: 0.9;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-tagline {
+    font-size: clamp(1.5rem, 5vw, 2.5rem);
+  }
+
+  .hero-description {
+    font-size: 0.95rem;
+    max-width: 100%;
+    margin-bottom: 2.5rem;
+  }
+
+  .hero-stats {
+    position: static;
+    margin-top: 4rem;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .hero-bg-text {
+    display: none; /* Hide background text on small screens to reduce noise */
+  }
+
+  .hero-grid-overlay {
+    width: 100%;
+    opacity: 0.3;
+  }
+
+  /* SECTIONS MOBILE/TABLET */
+  .section-padding {
+    padding: 5rem 1.5rem;
+  }
+
+  .section-title {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+  }
+
+  .about-grid, .projects-grid, .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .about-education-col {
+    border-left: none;
+    border-top: 2px solid var(--primary-red);
+    padding-left: 0;
+    padding-top: 3rem;
+    margin-top: 1rem;
+  }
+
+  .project-card {
+    padding: 2.5rem 1.5rem;
+  }
+
+  .project-number {
+    font-size: 3.5rem;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .skills-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .skill-category {
+    padding: 1.5rem;
+  }
+
+  .contact-title {
+    font-size: clamp(2rem, 7vw, 3.5rem);
+  }
+
+  .site-footer {
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+  }
+
+  /* CERT PAGE MOBILE/TABLET */
+  .full-cert-card {
+    margin-bottom: 2.5rem;
+  }
+
+  .cert-image-container {
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 550px) {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-primary, .btn-secondary {
+    width: 100%;
+    text-align: center;
+    padding: 1.25rem;
+  }
+
+  .cert-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .view-cert-btn {
+    margin-top: 0.5rem;
+  }
+}
 .full-height {
   min-height: 100vh;
 }
